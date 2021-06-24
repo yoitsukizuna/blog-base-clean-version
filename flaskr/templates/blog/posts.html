@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+
+
+{% block header %}
+
+  <h1>{% block title %}Posts{% endblock %}  </h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('blog.create') }}">Tell us What's New</a>
+
+  {% endif %}
+  
+    {% endblock %}
+
+  {% block content %}
+  
+
+  <div class="card-group">
+      {% for post in posts %}
+     
+      <div class="card postcard" id="#postcard" >
+        {%if post['img_url'] %}
+              <a href="{{ url_for('blog.post', id=post.id,dir=0) }}"><img src="{{ post['img_url'] }} "  class="card-img-top" alt="the image from post {{ post['title'] }} "></a>
+              {%else%}
+              <a href="{{ url_for('blog.post', id=post.id,dir=0) }}"><img src="https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png "  class="card-img-top" alt="the image from post {{ post['title'] }} " style="width:100px; height:100px"></a>
+        {%endif%}
+        <div class="card-body">
+          <h5 class="card-title"><a href="{{ url_for('blog.post', id=post['id'],dir=0) }}">{{  post['title']  }}</a></h5>
+          <p class="card-name"><img src="{{post['pfp']}}"style="width:30px;height:30px">by {{ post['nickname'] }} on {{ post['created'].strftime('%Y-%m-%d-%H:%M:%S') }}</p>
+            {%if post['body'] %}
+              {% if post['body']| length>100 %}
+              <p class="card-text"> <i> "{{ post['body'][:100] }}..."</i></p>
+              {%else%}
+              <p class="card-text"> <i> "{{ post['body'] }}"</i></p>
+              {%endif%}
+            {%endif%}
+          <a href="{{ url_for('blog.post', id=post.id,dir=0) }}" >details</a>
+          <a  ONCLICK="ShowAndHide({{post['id']}})"><u>Quick Comment</u></a>
+        </div>
+        
+        
+        <div ID="commentbox{{post['id']}}" STYLE="display:none"> 
+          <form action="{{ url_for('blog.comment', id=post['id'],user=g.user['id']) }}" method="post">
+          <label for="body">Leave Your Comment:</label>
+          <textarea name="commentbody" id="body" autofocus>{{ request.form['commentbody'] }}</textarea>
+          <div class="row">
+            <div class="col-sm-3">
+              <input type="submit" value="Save">
+            </div>
+           <a href="{{url_for('blog.posts',offset=0)}}">Cancel</a>
+          </div>
+        </form>
+      </div>
+        </div>
+        
+       
+      {% endfor %}
+        
+ 
+      
+    </div>
+
+
+<script>
+
+function ShowAndHide(i) {
+  
+  var x = document.getElementById('commentbox'+i);
+  if (x.style.display == 'none') {
+      x.style.display = 'block';
+  } else {
+      x.style.display = 'none';
+  }
+}
+</script>
+{% endblock %}

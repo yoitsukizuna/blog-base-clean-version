@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<table style="width: 100%;">
+  <tr>
+  <td>
+    <h1><a href="{{url_for('blog.post',id =post['id'],dir=0)}}">{% block title %}Post | {{post ['title']}}{% endblock %}</a></h1>
+  </td>
+  <td style="text-align: left;"><a href="{{ url_for('blog.post', id=post['id']-1,dir=2)}}">previous post</a> | <a href="{{ url_for('blog.post', id=post['id']+1,dir=1 )}}">next post</a></td>
+  <td style="text-align: right;"> 
+    <a href="{{url_for('blog.posts',offset=0)}}">Back to posts</a>
+  </td>
+</tr>
+</table>
+
+
+{% endblock %}
+
+  {% block content %}
+  
+    
+    <article class="post">
+      <header>
+        <table style="width :100%">
+          <tr>
+          <td>
+            <div class="about"><img src="{{post['pfp']}}"style="width:50px; height:50px;"> by <a href="{{url_for('blog.profile',id=post['author_id'])}}">{{ post['nickname'] }} </a>on {{ post['created'].strftime('%Y-%m-%d-%H:%M:%S') }}</div>
+          </td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td style="text-align: right;">
+            <h5>likes: {{likes|length}}</h5>   
+          </td>
+          <td style="text-align: right;">
+            {% if liked %}
+            <form method="post" action="{{url_for('blog.unlike',id=post['id'])}}">
+              <button class="btn btn-light" style="background-color: red; color:white;border: 1px solid white;"id="unlikebtn" ><span>liked</span></button>
+            </form>
+            {%else%}
+              <form method="post" action="{{url_for('blog.like',id=post['id'])}}">
+                <button class="btn btn-light" id="likebtn" >like</button>
+              </form>
+            {% endif %}
+          </td>
+          
+          <td>
+            {% if g.user['id'] == post['author_id'] %}
+            <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+            {% endif %}
+            
+          </td>
+        </tr>
+        </table>
+      </header>
+
+        {%if post['img_url'] %}
+        <img src="{{post['img_url']}}" class="post-image"  alt="the image from post {{ post['title'] }} ">
+        {%else%}
+        <img src="https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png "  class="post-image" style="width:300px;"  alt="the image from post {{ post['title'] }} ">
+          {%endif%}
+    
+        {%if post['body']%}
+        <p class="body">{{ post['body'] }}</p>
+        <hr>
+        {%endif%}
+      </article>
+     <table style="width: 100%;">
+       <tr style="text-align: right;">
+        <td style="align-items: center;"> <!-- comment section -->
+          <BUTTON ONCLICK="ShowAndHide()" class="btn btn-light">Leave Your Comment</BUTTON> 
+          <DIV ID="commentbox" STYLE="display:none"> 
+            <hr>
+            <form action="{{ url_for('blog.comment', id=post['id'],user=g.user['id']) }}" method="post">
+              <textarea name="commentbody" id="body" autofocus>{{ request.form['commentbody'] }}</textarea>
+              <div class="row">
+                <div class="col-sm-8">   </div>
+                <div class="col-sm-2"><input type="submit" class="btn btn-light" value="Save"></div>
+                <div class="col-sm-2"><a href="{{url_for('blog.post',id =post['id'],dir=0)}}"  class="btn btn-light">Cancel</a></div>
+              </div>
+            </form>
+            </DIV>
+          </td>
+       </tr>
+      
+       
+  
+     </table>
+      
+      <br>
+
+
+     
+      <!-- display post comment -->
+            
+      <article class="comment" ID="commentthread">
+        <header>
+          <h5>comments</h5>
+          <hr>
+          {% if comments != None %}
+            {%for comment in comments %}
+            <div class="commentheader"> <b><a href="{{url_for('blog.profile',id=comment['author_id'])}}"> {{ comment['nickname'] }} </a>said: </b></div>
+            <br>
+            </header>
+            <div class="retweetbox">
+              {% if comment['retweet_id'] %}
+                {%for oldcomment in comments%}
+                  {% if oldcomment['id']==comment['retweet_id']%}
+                    <p><i>reply to: {{oldcomment['nickname']}} said on {{oldcomment['created'].strftime('%Y-%m-%d-%H:%M:%S')}}</i></p>
+                    <p><i> "{{oldcomment['body']}}"</i></p>
+                    <hr>
+                  {%endif%}
+                {%endfor%}
+              {%endif%}
+            </div>
+              <p class="body">{{ comment['body'] }}</p>
+              <div class="commentend">on {{ comment['created'].strftime('%Y-%m-%d-%H:%M:%S') }}</div>
+              <!-- edit buton -->
+              {% if g.user['id'] == comment['author_id'] %}
+                <BUTTON ONCLICK="ShowAndHide1({{comment['id']}})" class="btn btn-light" style="max-width: fit-content;">edit</BUTTON>
+                  <DIV ID="commentboxedit{{comment['id']}}" STYLE="display:none">
+                    <hr>
+                    <form action="{{ url_for('blog.commentupdate', id=post['id'],user=g.user['id'],cid=comment['id']) }}" method="post">
+                      <textarea name="commentbodyup" id="body" autofocus>{{ comment['body'] or request.form['commentbodyup'] }}</textarea>
+                      <input type="submit" value="Save" class="btn btn-light"style="max-width: fit-content;">
+                        </form>
+                      <div class="row">
+                        <div class="col-sm-2">
+                        <form action="{{ url_for('blog.commentdelete', id=post['id'],cid=comment['id']) }}" method="post">
+                          <input class="danger btn btn-light" type="submit" value="Delete" onclick="return confirm('Are you sure?');" style="max-width: fit-content;">
+                        </form>
+                          </div>
+                        <div class="col-sm-2">
+                          <form >
+                            <a href="{{url_for('blog.post',id =post['id'],dir=0)}}" class="btn btn-light"style="max-width: fit-content;">Cancel</a>
+                          </form>
+                          
+                          </div>
+                      </DIV>
+                      </div>
+              {% endif %} 
+              
+                <!-- retweet -->
+              <BUTTON ONCLICK="ShowAndHide2({{comment['id']}})" class="btn btn-light">reply</BUTTON>
+                  <DIV ID="commentboxretweet{{comment['id']}}" STYLE="display:none">
+                    <hr>
+                    <p><i>{{g.user['nickname']}} said: {{comment['body']}}</i></p>
+                    <hr>
+                    <form action="{{ url_for('blog.commentretweet', id=post['id'],user=g.user['id'],rid=comment['id']) }}" method="post">
+                      <textarea name="commentboxretweet" id="body" autofocus>{{ request.form['commentboxretweet'] }}</textarea>
+                          <input type="submit" value="Save" class="btn btn-light" style="max-width: fit-content;">
+                    </form>
+                    <a href="{{url_for('blog.post',id =post['id'],dir=0)}}" class="btn btn-light"  style="max-width: fit-content;">Cancel</a>
+                    </DIV>
+              {% if g.user['user_type'] == 'admin' or g.user['user_type']=='manager' %}
+                <form action="{{ url_for('blog.admincommentdelete', id=post['id'],cid=comment['id']) }}" method="post" style="max-width:fit-content">
+                  <input class=" btn btn-secondary" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+                </form>
+              {% endif %}
+                    
+              {% if not loop.last %}
+                <hr>
+              {% endif %}
+            {%endfor%}
+          {%endif%}
+      </article>
+  <!-- hidden comment box -->
+  <SCRIPT>
+    function ShowAndHide() {
+        var x = document.getElementById('commentbox');
+        if (x.style.display == 'none') {
+            x.style.display = 'block';
+        } else {
+            x.style.display = 'none';
+        }
+    }
+    function ShowAndHide1(i) {
+        var x = document.getElementById('commentboxedit'+i);
+        if (x.style.display == 'none') {
+            x.style.display = 'block';
+        } else {
+            x.style.display = 'none';
+        }
+    }
+    function ShowAndHide2(i) {
+        var x = document.getElementById('commentboxretweet'+i);
+        if (x.style.display == 'none') {
+            x.style.display = 'block';
+        } else {
+            x.style.display = 'none';
+        }
+    }
+    
+    </SCRIPT>
+
+
+
+{% endblock %}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <title>Get Inspiration</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Search Photo</title>
+        <link rel="stylesheet" href="/static/apistyle.css">
+    </head>
+
+    <body>
+        
+        <div class="container">
+            <h1 class="title">Search Photos</h1>
+            <form class="form">
+                <input type="text" class="search input" placeholder="Search..." required/>
+                <button type="submit" class="btn">Search</button>
+
+            </form>
+            <a href="{{url_for('blog.posts',offset=0)}}"><button type="button" class="btn">Back</button></a>
+            
+           
+
+            <div class="result-stats"></div>
+
+            <div class="images"></div>
+
+            <div class="pagination">
+                <button class="hidden prev"><a href="#top">Prev</a></button>
+                <button class="hidden next"><a href="#top">Next</a></button>
+            </div>
+        </div>
+
+        <script src="/static/apiscript.js"></script>
+        
+    </body>
+    
+</html>
+
+<!--!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Unsplash - Search Photo</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        
+        <div class="container">
+            <h1 class="title">Photo Search</h1>
+            
+            <form class="form">
+                <input type="text" class="search-input js-search-input" placeholder="Search photos..." />
+                <button type="submit" class="btn">Search</button>
+            </form>
+
+            <div class="result-stats js-result-stats"></div>
+
+            <div class="search-results js-search-results"></div>
+
+            <div class="pagination">
+                <button class="hidden prev-btn js-prev"><a href="#top" style="text-decoration: none; color: white;">Previous page</a>
+                </button>
+                <button class="hidden next-btn js-next"><a href="#top" style="text-decoration: none; color: white;">Next page</a></button>
+            </div>
+        </div>
+
+        <script src="script.js"></script>
+        
+    </body>
+    
+</html-->

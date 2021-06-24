@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid search" >
+  <h1 style="text-align: center;">{% block title %}Search for: {% endblock %}</h1>
+  <form method="post" style="margin:auto;align-items: center;">
+    <input name="searchbody" id="searchbody" value="{{ request.form['searchbody'] }}" required>
+    <input type="submit" value="search" class="btn btn-light" >
+    <a href="{{ url_for('blog.posts', offset=0) }}">Cancel</a>
+  </form>
+</div>
+
+
+
+
+{% endblock %}

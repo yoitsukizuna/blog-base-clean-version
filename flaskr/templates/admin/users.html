@@ -1,0 +1,79 @@
+{% extends 'admin/base.html' %}
+{%block content%}
+
+
+<div class="container-fluid">
+    
+    <h1>USERS</h1>
+    <button class="btn btn-primary"><a href="{{url_for('auth.adduser')}}">Add</a></button>
+</div>
+<hr>
+<div class="admintable">
+<table style="width: 100%;text-align: center;">
+    <th>id</th>
+    <th>pfp</th>
+    <th>username</th>
+    <th>nickname</th>
+    <th>useremail</th>
+    <th>website</th>
+    <th>user_type</th>
+    <th>register_date</th>
+    <th>last_login</th>
+    <th>Status</th>
+    <th>Change type</th>
+    <th>Careful</th>
+    {%for user in users %}
+    <tr class="user-table">
+        <td> {{user['id']}}</td>
+        <td><img src="{{user['pfp']}}" style="width: 50px; height:50px; border-radius: 3px;"></td>
+        <td><a href="{{url_for('blog.profile',id=user['id'])}}">{{user['username']}}</a></td>
+        <td><a href="{{url_for('blog.profile',id=user['id'])}}">{{user['nickname']}}</a></td>
+        <td>{{user['useremail']}}</td>
+        <td>{{user['website']}}</td>
+        <td>{{user['user_type']}}</td>
+        <td>{{user['register_date']}}</td>
+        <td>{{user['last_login']}}</td>
+        <td>
+            {% if user['status']=='disabled' %}
+            <form action="{{ url_for('auth.activeuser',id=user['id']) }}" method="post">
+                <input class="btn btn-secondary" type="submit" value="Disabled" >
+                </form>
+            {%else%}
+            <form action="{{ url_for('auth.disableuser',id=user['id']) }}" method="post">
+                <input class="btn btn-primary" type="submit" value="Actived" >
+                </form>
+          {%endif%}
+        </td>
+        <td>
+            {% if user['user_type'].lower()=='user' %}
+            <form action="{{ url_for('auth.addmanager',id=user['id']) }}" method="post">
+                <input class="btn btn-secondary" type="submit" value="User" >
+                </form>
+            {%elif user['user_type'].lower()=='manager'%}
+            <form action="{{ url_for('auth.removemanager',id=user['id']) }}" method="post">
+                <input class="btn btn-primary" type="submit" value="Manager" >
+                </form>
+            {%else%}
+                {{user['user_type']}}
+          {%endif%}
+        </td>
+        <td>
+            {% if user['user_type']=='admin' %}
+            <input class="btn btn-secondary disabled" type="submit" value="Delete"  disabled>
+            {%else%}
+            <form action="{{ url_for('auth.deleteuser',id=user['id']) }}" method="post">
+                <input class="btn btn-danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+                </form>
+            {%endif%}
+            </td>
+    </tr>  
+    {%endfor%}  
+</table>
+</div>
+
+
+
+
+
+
+{%endblock%}

@@ -1,0 +1,47 @@
+{% extends 'admin/base.html' %}
+
+{%block content%}
+<h1>POSTS</h1>
+<hr>
+<div class="admintable">
+<table style="width: 100%;text-align: center;">
+    <th>id</th>
+    <th>author_id</th>
+    <th>username</th>
+    <th>nickname</th>
+    <th>user_type</th>
+    <th>title</th>
+
+    <th>content</th>
+    <th>post created</th>
+    <th>Operations</th>
+    {%for post in posts %}
+    <tr class="user-table">
+        <td> {{post['id']}}</td>
+        <td>{{post['author_id']}}</td>
+        <td>{{post['username']}}</td>
+        <td>{{post['nickname']}}</td>
+        <td>{{post['user_type']}}</td>
+        <td><a href="{{ url_for('blog.post', id=post.id,dir=0) }}">{{post['title']}}</a></td>
+        <td>{{post['body']}}</td>
+        <td>{{post['created']}}</td>
+        <td>
+            {% if post['user_type']=='admin' %}
+            <input class="btn btn-secondary disabled" type="submit" value="Delete"  disabled>
+            {%else%}
+            <form action="{{ url_for('auth.deletepost',id=post['id']) }}" method="POST">
+                <input class="btn btn-danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+            </form>
+            {%endif%}
+            </td>
+    </tr>  
+    {%endfor%}  
+</table>
+
+
+</div>
+
+
+
+
+{%endblock%}

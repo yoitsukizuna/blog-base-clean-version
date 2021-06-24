@@ -1,0 +1,37 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} </title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+<link rel="stylesheet" href="/static/style.css">
+
+
+<nav class="navbar navbar-expand-lg navbar-light ">
+  <div class="container-fluid">
+  <ul class="nav">
+    <li class="nav-item"><span><a href="{{ url_for('index') }}"><img src="/static/img/icon.png" style="margin:auto; width:100px" alt="PHOTOBOX"></a></span></li>
+    <li class="nav-item"><span><a href="{{ url_for('index') }}"><h1 class="logo">PHOTOBOX</h1></a></span></li>
+    <li class="nav-item"> <span><a href="{{url_for('blog.api')}}">Inspiration</span></a></li>
+    <li class="nav-item"><span><a href="{{url_for('blog.posts',offset=0)}}">Explore</a></span></li>
+   
+    {% if g.user %}
+      <li class="nav-item"><span><a>Hello! </a></span></li>
+      <li class="nav-item"><span><img src="{{g.user['pfp']}}" style="width:30px;height:30px"> </span></li>
+      <li class="nav-item"><span><a href="{{ url_for('index') }}" >{{ g.user['nickname'] }}</a></span></li>
+      <li class="nav-item"> <span><a href="https://realtime-chatapp-2283c.web.app/">ChatRoom</span></a></li>
+      <li class="nav-item"> <span><a href="{{ url_for('blog.search') }}">Search</a></span></li>
+      <li class="nav-item"><span><a href="{{ url_for('auth.logout') }}">Log Out</a></span></li>
+    {% else %}
+      <li class="nav-item"><span><a href="{{ url_for('auth.register') }}">Register</a></span></li>
+      <li class="nav-item"><span><a href="{{ url_for('auth.login') }}">Log In</a></span></li>
+    {% endif %}
+  </ul>
+</div>
+</nav>
+
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+
+  {% block content %}{% endblock %}
+</section>

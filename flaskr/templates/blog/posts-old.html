@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+
+
+{% block header %}
+
+  <h1>{% block title %}Posts{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('blog.create') }}">Tell us What's New</a>
+  {% endif %}
+  
+    {% endblock %}
+
+  {% block content %}
+
+  <!-- paginate section -->
+  <p id="pagelist">now showing: 1-10  </p>
+  <p>total posts: <b id="countlink">{{count}}</b></p>
+  <a href="{{url_for('blog.posts',offset=0)}} ">New Posts  </a>
+  <script>
+    function pagelist(){
+      // divide all pages amount by 10 and made buttons, onclick will link to a new page
+      let count = document.getElementById('countlink').firstChild.nodeValue;
+      
+      
+      let all = count/10;
+      let rest=count%10;
+      for(var i=1;i<all;i++){
+        document.write("<button id=page  ONCLICK='change("+i+","+0+")'>"+i+"</button> ");
+      }
+      if(rest!=0){
+        document.write("<button id=page ONCLICK='change("+i+","+rest+")'>"+i+"</button> ");
+      }
+      
+    }
+    
+    function change(i,j){
+      //change page description
+      if(j==0)
+        document.getElementById("pagelist").innerHTML="now showing: "+((i-1)*10+1)+"-"+i*10+"";
+      else
+        document.getElementById("pagelist").innerHTML="now showing: "+((i-1)*10+1)+"-"+((i-1)*10+j)+"";
+      // change the page links
+       
+    }
+    window.onload=pagelist()
+  
+  </script>
+  <hr>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <!-- <script type=text/javascript>
+    $(function() {
+      $('#page').bind('click', function() {
+      $.getJSON('/background_process', {
+        proglang: $('input[name="proglang"]').val(),
+      }, function(data) {
+        $("#result").text(data.result);
+      });
+      return false;
+      });
+    });
+  </script>
+
+  <div class='container'>
+  <h3>Welcome! Which is the best programming language of them all?</h3>
+    <form>
+      <input type=text size=5 name=proglang>
+      <a href=# id=process_input>Submit</a>
+    </form>
+  <p id=result></p>
+  </div>
+  <button id="click"> click</button> -->
+  <script type=text/javascript>
+    
+    $(document).ready(function(){
+      
+      var i=3;
+      $('#click').bind('click', function() {
+        // $.getJSON('/'+i+'/posts')
+        $(".posts").load("/10/posts")
+    });
+});
+</script>
+
+<button id=click>click</button>
+<div class="posts"></div>
+<!-- 
+  
+  <a href="{{url_for('blog.posts',offset=10)}} " method="POST">next 10 posts</a> -->
+
+    <!-- paginate section ends-->
+
+
+  <table>
+    <thead>
+      <tr>
+        <th># |</th>
+        <th>Title |</th>
+        <th>Username |</th>
+        <th>Post Date</th>
+      </tr>
+    </thead>
+    <tbody> 
+      {% for post in posts %}
+        <tr>
+          <td>{{ loop.index}}</td>
+          {%if post['img_url'] %}
+          <td><a href="{{ url_for('blog.post', id=post.id,dir=0) }}"><img src="{{ post['img_url'] }} "  class="posts-img-icon" alt="the image from post {{ post['title'] }} " style="width:100px; height:100px"></a></td>
+          {%else%}
+          <td><a href="{{ url_for('blog.post', id=post.id,dir=0) }}"><img src="https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png "  class="posts-img-icon" alt="the image from post {{ post['title'] }} " style="width:100px; height:100px"></a></td>
+          
+          {%endif%}
+    
+          <td><a href="{{ url_for('blog.post', id=post['id'],dir=0) }}">{{  post['title']  }}</a></td>
+          <td>by {{ post['username'] }} </td>
+          <td>on {{ post['created'].strftime('%Y-%m-%d-%H:%M:%S') }}</td>
+          <td><BUTTON ONCLICK="ShowAndHide({{post['id']}})">Quick Comment</BUTTON> </td>
+          <td><DIV ID="commentbox{{post['id']}}" STYLE="display:none"> 
+            <form action="{{ url_for('blog.comment', id=post['id'],user=g.user['id']) }}" method="post">
+            <label for="body">Leave Your Comment:</label>
+            <textarea name="commentbody" id="body" autofocus>{{ request.form['commentbody'] }}</textarea>
+            <div class="row">
+              <div class="col-sm-3">
+                <input type="submit" value="Save">
+              </div>
+              <div class="col-sm-7"></div>
+              <div class="col-sm-2"><a href="{{url_for('blog.posts',offset=0)}}">Cancel</a></div>
+            </div>
+          </form>
+          </DIV>
+        </td>
+            
+            
+        </tr>
+ 
+      {% endfor %}
+      
+    </tbody>
+  </table>
+
+<hr>
+<script>
+function ShowAndHide(i) {
+  
+  var x = document.getElementById('commentbox'+i);
+  if (x.style.display == 'none') {
+      x.style.display = 'block';
+  } else {
+      x.style.display = 'none';
+  }
+}
+</script>
+{% endblock %}

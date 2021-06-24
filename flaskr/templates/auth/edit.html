@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Edit Profile{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    <label for="nikcname">New Nickname:</label>
+    <input name="nickname" id="nickname" value="{{ request.form['nickname'] or g.user['nickname'] }}" placeholder="pick a nice nickname">
+    <label for="pfp">Upload profile pic: (only 'png', 'jpg', 'jpeg', 'gif' allowed)</label>
+    <input type=file name="file" id="file" >
+    <label for="website">Website:</label>
+    <input name="website" id="website" value="{{ request.form['website'] or g.user['website'] }}" placeholder="Personal Website">
+    <label for="aboutme">About me:</label>
+    <input name="aboutme" id="aboutme" value="{{ request.form['aboutme'] or g.user['About'] }}" placeholder="Say Something About Yourself">
+    <input type="submit" value="Save Changes">
+  </form>
+  <hr>
+
+  <a href="{{ url_for('blog.index') }}">Cancel</a>
+{% endblock %}

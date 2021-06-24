@@ -1,0 +1,16 @@
+{% extends 'admin/base.html' %}
+
+
+{% block content %}
+
+<div class="container-fluid search" >
+  <form method="post" style="margin:auto;align-items: center;">
+    <input name="searchbody" id="searchbody" value="{{ request.form['searchbody'] }}" required>
+    <input type="submit" value="search" class="btn btn-light" >
+  </form>
+</div>
+
+
+
+
+{% endblock %}

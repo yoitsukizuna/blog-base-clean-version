@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<title>Admin Page | PHOTOBOX </title>
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/dropdown.css">
+</head>
+<body>
+
+
+<nav class="navbar">
+  <ul>
+    <li><span><h1><a href="{{url_for('auth.admin')}}">Admin</a></h1></span></li>
+    <li><span><a href="{{url_for('auth.adminposts')}}">Posts</a></span></li>
+    <li><span><a href="{{url_for('auth.adminusers')}}">Users</a></span></li>
+    <li> <span><a href="{{ url_for('auth.search') }}">Search</a></span></li>
+    <li><span><a href="{{ url_for('auth.logout') }}">Log Out</a></span></li>
+  
+  </ul>
+
+</nav>
+
+
+
+<section class="manage">
+{%block content%}
+
+
+{%endblock%}
+</section>
+
+
+</body>
+
+</html>

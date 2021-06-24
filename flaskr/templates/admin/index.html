@@ -1,0 +1,28 @@
+{% extends 'admin/base.html' %}
+
+{%block content%}
+
+<h2>Today :  <span id="datetime"></span></h2>
+<h2>Total Post : {{posts|length}}</h2>
+<h2>Total User : {{users|length}}</h2>
+<h2>Popular User: {{max['nickname']}}</h2>
+{% set pop = max['MAX(rank)'] %}
+<h2>Popularity: {{'%0.2f' % pop|float}}%</h2>
+<hr>
+<h2>Ranking Chart:</h2>
+{% for rank in ranks %}
+<div class="progress progress-bar-hr" style="margin-bottom: 0.3rem;">
+  <div class="progress-bar" role="progressbar" aria-valuenow="{{rank['rank']}}" aria-valuemin="0" aria-valuemax="100" style="width: {{rank['rank']}}%;">
+    <span class="sr-only">{{rank['rank']}}</span>
+    <label>{{rank['nickname']}}</label>
+  </div>
+</div>
+{%endfor%}
+
+
+<script>
+  var dt = new Date();
+  document.getElementById("datetime").innerHTML = dt.toLocaleString();
+  </script>
+  
+{%endblock%}
